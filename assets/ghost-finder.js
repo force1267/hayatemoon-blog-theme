@@ -3762,7 +3762,6 @@ function GhostContentAPI(_ref) {
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (GhostContentAPI);
-//# sourceMappingURL=content-api.js.map
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../process/browser.js */ "./node_modules/process/browser.js")))
 
@@ -4958,7 +4957,6 @@ var purify = createDOMPurify();
 return purify;
 
 })));
-//# sourceMappingURL=purify.js.map
 
 
 /***/ }),

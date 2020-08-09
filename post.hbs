@@ -28,6 +28,18 @@
         </section>
         --}}
 
+        <div id="likes">
+            <hr>
+            <div class="stat like">
+                <img src="/assets/icons/heart.svg" alt="like">
+                <img src="/assets/icons/heart fill.svg" alt="liked">
+                <span>0</span>
+            </div>
+            <div class="stat view">
+                <span>0</span>
+                <img src="/assets/icons/eye.svg" alt="views">
+            </div>
+        </div>
         <hr>
         <aside>
             {{#foreach tags}}
@@ -39,7 +51,7 @@
 
 {{!-- related posts --}}
 {{#if primary_tag}}
-    {{#get "posts" filter="tags:{{primary_tag.slug}}+id:-{{id}}" limit="3" as |related_posts|}}
+    {{#get "posts" filter="tags:{{primary_tag.slug}}+id:-{{id}}" limit="4" as |related_posts|}}
         {{#if related_posts}}
         <aside id="related">
             <header>
@@ -108,5 +120,29 @@
             // },
             // scrollbar: { el: '.swiper-scrollbar' },
         })
+        let likes = document.querySelector(".stat.like")
+        let likespan = document.querySelector(".stat.like span")
+        let viewspan = document.querySelector(".stat.view span")
+        {{#post}}
+        likes.onclick = e => {
+            if(!likes.classList.contains("liked")) {
+                likes.classList.add("liked")
+                fetch("/like/{{slug}}", { method: "post" })
+                .then(res => {
+                    let now = likespan.innerHTML
+                    likespan.innerHTML = now - 1 + 2
+                })
+                .catch(console.error)
+            }
+        }
+        fetch("/info/{{slug}}")
+        .then(res => res.json())
+        .then(info => {
+            likespan.innerHTML = info.like
+            viewspan.innerHTML = info.view
+        })
+        .then(fetch("/view/{{slug}}", { method: "post" }))
+        .catch(console.error)
+        {{/post}}
     })
 </script>

@@ -119,7 +119,7 @@
 @media only screen and (min-width: 1960px) {
     :root {
         font-size: 100%;
-        --font-scale: 1.4rem;
+        --font-scale: 1.3rem;
         --container: 20vw;
     }
 }
@@ -252,8 +252,7 @@ nav h1 a,
     content: "prev";
     margin-right: 0.75rem;
     margin-top: 0.5rem;
-    /* font-size: 1.25rem; */
-    font-size: var(--t2);
+    font-size: 1.25rem;
     font-weight: bold;
     font-family: swiper-icons;
     text-transform: none;
@@ -315,7 +314,7 @@ header nav div {
     z-index: 1001;
     background-color: #fffa;
     backdrop-filter: blur(10px);
-    padding: 15% 7vw;
+    padding: 15% var(--container);
     overflow-x: scroll;
 }
 
@@ -455,8 +454,8 @@ header nav div {
     margin: 0;
     margin-right: 5%;
     color: var(--text);
-    font-family: iransans-medium;
-    font-weight: 80;
+    font-family: iransans;
+    font-weight: normal;
     /* font-size: 1.7rem; */
     font-size: var(--t1);
 }
@@ -541,7 +540,7 @@ header nav div {
     border: 1px solid var(--text-light);
     background-color: #0000;
     border-radius: 3rem;
-    color: var(--text-light);
+    color: var(--text-light) !important;
     padding: 1rem 2rem;
     margin: 0 1rem !important;
     cursor: pointer;
@@ -551,6 +550,67 @@ header nav div {
     font-weight: normal;
     text-align: center;
 }
+
+/* likes */
+#likes * {
+    transition: 250ms;
+}
+#likes .stat {
+    background-color: var(--bg-dark);
+    color: var(--text);
+    display: inline-grid;
+    align-content: space-between;
+    justify-content: space-around;
+    width: 6rem;
+    height: 9rem;
+    border-radius: 4rem;
+    text-align: center;
+    padding: 2rem;
+    font-size: var(--t2);
+    margin-bottom: 4vh;
+}
+#likes .stat img {
+    width: 2.5rem;
+    transition-duration: unset !important;
+    height: unset !important;
+    margin-right: unset !important;
+}
+#likes .stat.view {
+    float: left;
+}
+#likes .stat.like {
+    float: right;
+}
+
+#likes .stat.like.liked,
+#likes .stat.like:hover {
+    background-color: var(--light);
+    color: var(--text-light);
+}
+
+#likes .stat.like:not(.liked) {
+    cursor: pointer;
+    height: 6rem;
+}
+#likes .stat.like span {
+    opacity: 1;
+}
+#likes .stat.like:not(.liked) span {
+    opacity: 0;
+}
+
+#likes .stat.like img:nth-of-type(2),
+#likes .stat.like span {
+    display: none;
+}
+#likes .stat.like.liked img:first-of-type {
+    display: none;
+}
+#likes .stat.like.liked img:nth-of-type(2),
+#likes .stat.like.liked span {
+    display: block;
+}
+
 #post aside {
     display: flex;
     flex-flow: row wrap;
@@ -584,7 +644,7 @@ header nav div {
 
 .tag.nav {
     border: 1px solid #0000;
-    color: white;
+    color: white !important;
     overflow: hidden;
     background-repeat: no-repeat;
     background-size: cover;
@@ -660,7 +720,7 @@ header nav div {
 #index>.post-card:first-of-type header>h1 {
     margin-right: 0;
     /* font-size: 3rem; */
-    font-size: var(--hm1);
+    font-size: var(--hm2);
     font-family: lalezar;
     line-height: 3.5rem;
 }
@@ -870,14 +930,7 @@ footer p span {
 
 /* blog */
 
-#post {
-    width: 100%;
-    padding: 6.5%;
-    margin-top: 7vh;
-    margin-bottom: 7vh;
-}
-
-#related {
+#post, #related {
     width: 100%;
     padding: 6.5%;
     margin-top: 7vh;
@@ -892,7 +945,7 @@ footer p span {
 #post p a,
 #post ol a {
     font-weight: bold;
-    color: var(--text);
+    color: var(--text) !important;
     border-bottom: 0.3rem solid var(--main-light);
 }
 #post a:visited {
@@ -934,7 +987,6 @@ footer p span {
     font-size: var(--t1);
     word-wrap: break-word;
     text-align: justify;
-    text-justify: inter-word;
 }
 
 #content p {
@@ -1316,12 +1368,42 @@ footer p span {
         margin-right: 1.19rem;
         visibility: visible;
     }
+
+    /* likes */
+    #likes {
+        position: absolute;
+        left: 0;
+        top: 0;
+        margin-top: 0;
+        width: 6rem;
+        height: 100%;
+    }
+    #likes::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: calc(20rem + 8vh);
+        background-image: linear-gradient(to top, var(--bg-light), #f3f3f3fe, transparent);;
+    }
+    #likes hr {
+        display: none;
+    }
+    #likes .stat {
+        position: sticky;
+        top: calc(3vh + 10rem + 7vh + 6.5rem + 4vh);
+        float: unset;
+    }
+    #likes .stat.like {
+        top: calc(3vh + 10rem + 7vh + 6.5rem + 4vh + 9rem + 2.5rem);
+    }
+
     .post-card {
         height: 11vw;
         margin-bottom: 3.5vw;
     }
     .post-card div {
-        /* width: 35%; */
         width: 11vw;
         height: 100%;
     }
@@ -1333,7 +1415,7 @@ footer p span {
         display: none;
     }
     .post-card h1 {
-        margin-right: 26px;
+        margin-right: 2.5rem;
         /* font-size: 1.2vw; */
         font-size: var(--t1);
     }
@@ -1382,7 +1464,7 @@ footer p span {
     }
     #index>.post-card:first-of-type header>h1 {
         /* font-size: 3rem; */
-        font-size: var(--h1);
+        font-size: var(--h2);
         line-height: 4rem;
     }
     #index>.post-card:first-of-type section {
@@ -1465,19 +1547,59 @@ footer p span {
         width: 100%;
         margin-bottom: 0;
     }
-    /* footer {
-        width: calc(100% + 2 * var(--container));
-        margin-right: calc(-1 * var(--container));
-        padding-right: var(--container);
-        padding-left: auto;
-    } */
 
     /* blog */
     #post>header>h1 {
         font-size: var(--h1);
     }
-    #post, #related {
+    #post {
         padding: 0 10vw;
+        position: relative;
+    }
+    #related {
+        padding: 0;
+        display: grid;
+        grid-template-rows: auto 40vh;
+        grid-template-columns: auto auto auto auto;
+        grid-gap: 2rem 2rem;
+        gap: 2rem 2rem;
+        height: 100vh;
+        min-height: 55rem;
+        max-height: 60rem;
+        align-content: start;
+    }
+    #related header {
+        grid-area: 1 / span 4;
+    }
+    #related .post-card {
+        grid-row: 2 / 3;
+        grid-column: 1 / span 1;
+        width: 100%;
+        max-width: 16vw;
+        height: 100%;
+        margin: 0;
+        flex-flow: row wrap;
+    }
+    #related .post-card div {
+        width: 100%;
+        padding-top: 100%;
+        height: unset;
+        position: relative;
+    }
+    #related .post-card div img {
+        width: 150%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: -25%;
+    }
+    #related .post-card h1 {
+        margin-right: 5% !important;
+        width: 90% !important;
+    }
+    #related .post-card>*:not(div) {
+        width: 100%;
+        margin-top: 2rem;
     }
 
     #post>figure {
