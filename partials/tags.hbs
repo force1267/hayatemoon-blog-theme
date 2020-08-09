@@ -1,0 +1,57 @@
+<nav id="tags-container">
+    <div id="tags" class="swiper-container">
+        <div class="fade right"></div>
+        <div class="swiper-wrapper">
+            <a href="/" class="tag nav swiper-slide" title="همه">
+                <div></div>
+                <span>همه</span>
+            </a>
+            {{#get "tags" limit="all"}}
+                {{#foreach tags}}
+                    {{#if feature_image}}
+                        <a href="{{url}}" class="tag nav swiper-slide" title="{{name}}"
+                            style="background-image: url({{feature_image}});">
+                            <div></div>
+                            <span>{{name}}</span>
+                        </a>
+                    {{else}}
+                        {{!-- <a href="{{url}}" class="tag swiper-slide" title="{{name}}">{{name}}</a> --}}
+                        <a href="{{url}}" class="tag nav swiper-slide" title="{{name}}">
+                            <div></div>
+                            <span>{{name}}</span>
+                        </a>
+                    {{/if}}
+                {{/foreach}}
+            {{/get}}
+        </div>
+        <div class="fade left"></div>
+    </div>
+    <div onclick="prev()" class="btn next"></div>
+    <div onclick="next()" class="btn prev"></div>
+</nav>
+<script>
+    let ts;
+    function next() {
+        return ts.slideNext()
+    }
+    function prev() {
+        return ts.slidePrev()
+    }
+    window.addEventListener('DOMContentLoaded', e => {
+        // init swiper
+        let swiper = new Swiper ('.swiper-container', {
+            direction: 'horizontal',
+            slidesPerView: 'auto',
+            spaceBetween: 10,
+            freeMode: true,
+            loop: true,
+        })
+        ts = swiper
+
+        // active tag
+        let tags = document.querySelectorAll(`nav a.tag.nav[href="${location.pathname}"]`)
+        for(let tag of tags) {
+            tag.classList.add('active')
+        }
+    })
+</script>

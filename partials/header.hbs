@@ -1,0 +1,169 @@
+<div id="search-popup">
+    <div class="typography big">
+        <h1>حیاطمون</h1>
+        <h2>مجـــــــــــله</h2>
+    </div>
+    <h1>جستجو برای :</h1>
+    <input id="search-input" type="text" placeholder="نام مورد نظر را وارد کنید" autocomplete="off" />
+    <input id="search-tag-input" type="text" class="hidden" placeholder="نام مورد نظر را وارد کنید" autocomplete="off" />
+    <button onclick="searchForPosts()" class="active">پست ها</button>
+    <button onclick="searchForTags()">برچسب ها</button>
+    <div id="search-tags">
+        {{#get "tags" limit="all"}}
+            {{#foreach tags}}
+                <button onclick="searchByTag(this, '{{slug}}')" class="tag search hidden" title="{{name}}">{{name}}</button>
+            {{/foreach}}
+        {{/get}}
+    </div>
+    <section id="search-result"></section>
+    <section id="search-tag-result"></section>
+</div>
+<header>
+    <nav>
+        <div id="title"><h1><a href="/blog/">مجله حیاطمون</a></h1></div>
+        {{!-- <div id="logo"><img src="{{asset "assets/icons/hayatemoon logo - blue.png"}}"/></div> --}}
+        <a href="/" id="logo"><img src="/assets/icons/hayatemoon logo - blue.png"/></a>
+        <div id="search"><img id="search-img" src="/assets/icons/search.svg"/><h1 id="back" class="small hidden">بازگشت</h1></div>
+        <script>
+            (() => {
+                const search = document.getElementById('search')
+                const searchimg = document.getElementById('search-img')
+                const popup = document.getElementById('search-popup')
+                const searchinput = document.getElementById('search-input')
+                const back = document.getElementById('back')
+                let active = false
+                let hover = false
+                function show() {
+                    if(active) {
+                        popup.setAttribute('class', 'shown')
+                        searchimg.setAttribute('class', 'small-hidden')
+                        back.setAttribute('class', 'small shown')
+                        if(hover) {
+                            searchimg.setAttribute('src', '/assets/icons/close hover.svg');
+                        } else {
+                            searchimg.setAttribute('src', '/assets/icons/close.svg');
+                        }
+                        searchinput.focus()
+                    } else {
+                        popup.setAttribute('class', '')
+                        searchimg.setAttribute('class', '')
+                        back.setAttribute('class', 'small hidden')
+                        if(hover) {
+                            searchimg.setAttribute('src', '/assets/icons/search hover.svg');
+                        } else {
+                            searchimg.setAttribute('src', '/assets/icons/search.svg');
+                        }
+                    }
+                }
+                search.addEventListener('click', () => show(active = !active))
+                search.addEventListener('mouseover', () => show(hover = true))
+                search.addEventListener('mouseout', () => show(hover = false))
+                searchinput.addEventListener('keypress', e => {
+                    if (e.which == 13 || e.keyCode == 13 || e.key == "Enter") {
+                        // window.location.href = `https://google.com/search?q=site:hayatemoon.com/blog ${searchinput.value}`
+                    }
+                })
+            })()
+            function searchByTag(tag, slug) {
+                hideAllTags()
+                tag.classList.remove("hidden")
+                tag.classList.add("selected")
+                fetchByTag(slug).then(fillSearchResult).catch(console.error)
+                tag.onclick = () => {
+                    clearSearchInput()
+                    filterSearchTags()
+                    tag.classList.remove("selected")
+                    tag.onclick = () => searchByTag(tag, slug)
+                }
+            }
+            function searchForTags() {
+                let pbtn = document.querySelector('#search-popup>button:first-of-type')
+                let bbtn = document.querySelector('#search-popup>button:last-of-type')
+                let pi = document.querySelector('#search-input')
+                let bi = document.querySelector('#search-tag-input')
+                let ps = document.querySelector('#search-result')
+                let bs = document.querySelector('#search-tag-result')
+                if(pbtn.classList.contains('active')) {
+                    pbtn.classList.remove('active')
+                    bbtn.classList.add('active')
+                    pi.classList.add("hidden")
+                    bi.classList.remove("hidden")
+                    ps.classList.add("hidden")
+                    bs.classList.remove("hidden")
+                    filterSearchTags()
+                }
+            }
+            function searchForPosts() {
+                let pbtn = document.querySelector('#search-popup>button:first-of-type')
+                let bbtn = document.querySelector('#search-popup>button:last-of-type')
+                let pi = document.querySelector('#search-input')
+                let bi = document.querySelector('#search-tag-input')
+                let ps = document.querySelector('#search-result')
+                let bs = document.querySelector('#search-tag-result')
+                if(bbtn.classList.contains('active')) {
+                    pbtn.classList.add('active')
+                    bbtn.classList.remove('active')
+                    pi.classList.remove("hidden")
+                    bi.classList.add("hidden")
+                    ps.classList.remove("hidden")
+                    bs.classList.add("hidden")
+                    hideAllTags()
+                }
+            }
+            // utils
+            function filterSearchTags() {
+                fillSearchResult("")
+                let tags = document.querySelectorAll("#search-tags .tag")
+                let input = document.querySelector("#search-tag-input").value
+                for(let tag of tags) {
+                    if(tag.innerText.includes(input)) {
+                        tag.classList.remove("hidden")
+                    } else {
+                        tag.classList.add("hidden")
+                    }
+                }
+            }
+            function hideAllTags() {
+                let tags = document.querySelectorAll("#search-tags .tag")
+                for(let tag of tags) {
+                    tag.classList.remove("selected")
+                    tag.classList.add("hidden")
+                }
+            }
+            function clearSearchInput() {
+                document.querySelector('#search-tag-input').value = ""
+            }
+            function fillSearchResult(result) {
+                document.querySelector("#search-tag-result").innerHTML = result
+            }
+            async function fetchByTag(tag) {
+                let resp = await fetch(`/ghost/api/v3/content/posts/?key=${api_key}&filter=tag:${tag}&limit=all&fields=title,url,feature_image`)
+                json = await resp.json()
+                let posts = json.posts
+                console.log(posts)
+                let cards = []
+                for(let post of posts) {
+                    let card = 
+`<a href="##url" class="search-card">
+    <div>
+        <img src="##feature_image" alt="##title">
+    </div>
+    <h1>##title</h1>
+</a>`
+                    .split("##url").join(post.url)
+                    .split("##feature_image").join(post.feature_image)
+                    .split("##title").join(post.title)
+                    cards.push(card)
+                }
+                return cards.join('')
+            }
+            document.querySelector("#search-tag-input").addEventListener("input", event => {
+                filterSearchTags()
+            })
+        </script>
+    </nav>
+    <div class="typography big">
+        <h1>حیاطمون</h1>
+        <h2>مجـــــــــــله</h2>
+    </div>
+</header>

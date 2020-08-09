@@ -1,0 +1,75 @@
+{{!< default}}
+
+{{> tags}}
+
+<main id="index">
+    {{#foreach posts}}
+        {{> postcard}}
+    {{/foreach}}
+</main>
+
+{{!-- ghost doesn't have views so instead of popular, featured posts are shown --}}
+{{#get "posts" limit="3" filter="featured:true"}}
+    <aside id="popular">
+        <header>
+            {{!-- <img width="500" height="500" src="/assets/icons/popular post circles.svg" alt="lite circles"> --}}
+            <img src="/assets/icons/popular post circles.svg" alt="lite circles">
+            <h1>محبوب ترین ها در مجله ی حیاطمون</h1>
+        </header>
+        <section>
+            {{#foreach posts}}
+                {{> postcard}}
+            {{/foreach}}
+        </section>
+    </aside>
+{{/get}}
+
+{{#get "posts" limit="6"}}
+    <aside id="all">
+        <header>
+            <h1>جدید ترین پست ها</h1>
+        </header>
+        <section>
+            {{#foreach posts}}
+                {{> postcard}}
+            {{/foreach}}
+        </section>
+        <button>نمایش بیشتر</button>
+        <script src="{{asset "assets/moment.min.js"}}"></script>
+        <script>
+            (() => {
+                let nextPage = 2;
+                let perpage = 6;
+                document.querySelector("aside button").onclick = function more() {
+                    fetch(`/ghost/api/v3/content/posts?key=${api_key}&limit=${perpage}&page=${nextPage}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        for(let post of data.posts) {
+                            insert(post)
+                        }
+                        if (nextPage === data.meta.pagination.pages) {
+                            document.querySelector("aside button").style.display = "none"
+                        }
+                        nextPage ++
+                    }).catch(console.error)
+                }
+                moment.locale("fa")
+                function insert(post) {
+                    let div = document.createElement('div')
+                    div.setAttribute('class', 'post-card')
+                    div.innerHTML =
+                    `<div>
+                        <img src="${post.feature_image}" alt="${post.title}" />
+                    </div>
+                    <span>${moment(post.published_at).format("DD MMM . YYYY")}</span>
+                    <header>
+                        <h1>${post.title}</h1>
+                    </header>
+                    ${post.excerpt ? `<section><h2>${post.excerpt}</h2></section>` : ''}
+                    <a href="${post.url}">خواندن مطلب</a>`
+                    document.querySelector("#all section").appendChild(div)
+                }
+            })()
+        </script>
+    </aside>
+{{/get}}

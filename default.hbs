@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fa">
+{{!-- <html lang="{{@site.lang}}"> --}}
+<head>
+
+    {{!-- Document Settings --}}
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    {{!-- Base Meta --}}
+    <title>{{meta_title}}</title>
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <link rel="stylesheet" href="/assets/swiper-bundle.min.css">
+
+    {{!-- Styles'n'Scripts --}}
+    {{> style}}
+    <script src="/assets/swiper-bundle.min.js"></script>
+    
+    {{!-- This tag outputs SEO meta+structured data and other important settings --}}
+    {{ghost_head}}
+    <script>
+        if(!api_key) {
+            console.error("Please define `api_key` in ghost_head. it should be ghost content api key.")
+        }
+    </script>
+</head>
+<body dir="rtl" lang="fa" class="{{body_class}}">
+
+    {{> header}}
+
+    {{{body}}}
+
+    {{> footer}}
+
+    <script src="/assets/ghost-finder.js"></script>
+    <script>
+        var gf = new GhostFinder({
+            input: '#search-input',
+            showResult: '#search-result',
+            contentApiKey: api_key,
+            resultTemplate: "##results",
+            singleResultTemplate:
+            `<a href="##url" class="search-card">
+                <div>
+                    <img src="##feature_image" alt="##title">
+                </div>
+                <h1>##title</h1>
+            </a>`
+        })
+    </script>
+    {{!-- Ghost outputs important scripts and data with this tag - it should always be the very last thing before the closing body tag --}}
+    {{ghost_foot}}
+
+</body>
+</html>

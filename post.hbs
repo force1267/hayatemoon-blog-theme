@@ -1,0 +1,112 @@
+{{!< default}}
+
+{{#post}}
+<main>
+    <article id="post">
+        <span>{{date published_at format="DD MMMM . YYYY"}}</span>
+        <header>
+            <h1>{{title}}</h1>
+        </header>
+        {{#if feature_image}}
+        <figure>
+            <img src="{{img_url feature_image}}" alt="{{title}}" />
+        </figure>
+        {{/if}}
+
+        <section id="content">
+            {{content}}
+        </section>
+
+        {{!-- Email subscribe form at the bottom of the page --}}
+        {{!-- {{#if @labs.members}}
+            {{> subscribe-form}}
+        {{/if}} --}}
+
+        {{!--
+        <section class="post-full-comments">
+            If you want to embed comments, this is a good place to do it!
+        </section>
+        --}}
+
+        <hr>
+        <aside>
+            {{#foreach tags}}
+                <a href="{{url}}" class="tag" title="{{name}}">{{name}}</a>
+            {{/foreach}}
+        </aside>
+    </article>
+</main>
+
+{{!-- related posts --}}
+{{#if primary_tag}}
+    {{#get "posts" filter="tags:{{primary_tag.slug}}+id:-{{id}}" limit="3" as |related_posts|}}
+        {{#if related_posts}}
+        <aside id="related">
+            <header>
+                <h1>پست های مشابه</h1>
+            </header>
+            {{#foreach related_posts}}
+                {{> postcard}}
+            {{/foreach}}
+        </aside>
+        {{/if}}
+    {{/get}}
+{{/if}}
+
+{{/post}}
+
+
+<script>
+    window.addEventListener('DOMContentLoaded', e => {
+        let galls = document.querySelectorAll(".kg-gallery-card")
+        for(let kg of galls) {
+            let gallc = document.createElement('div')
+            let gall = kg.querySelector(".kg-gallery-container")
+            kg.innerHTML = ""
+            kg.appendChild(gallc)
+            gallc.appendChild(gall)
+            gallc.classList.add("swiper-container")
+            let imgs = gall.querySelectorAll("img")
+            gall.innerHTML = ""
+            gall.classList.add("swiper-wrapper")
+            for(let img of imgs) {
+                gall.appendChild(img)
+                img.classList.add("swiper-slide")
+            }
+            let pagination = document.createElement('div')
+            gallc.appendChild(pagination)
+            pagination.classList.add("swiper-pagination")
+
+            let next = document.createElement('div')
+            kg.appendChild(next)
+            next.classList.add("swiper-button-next")
+            next.classList.add("swiper-button")
+            next.addEventListener('click', e => {
+                gallc.swiper.slideNext()
+            })
+
+            let prev = document.createElement('div')
+            kg.appendChild(prev)
+            prev.classList.add("swiper-button-prev")
+            prev.classList.add("swiper-button")
+            prev.addEventListener('click', e => {
+                gallc.swiper.slidePrev()
+            })
+
+            // let scroll = document.createElement('div')
+            // kg.appendChild(scroll)
+            // scroll.classList.add("swiper-scrollbar")
+        }
+        // init swiper
+        let swiper = new Swiper ('.swiper-container', {
+            direction: 'horizontal',
+            loop: true,
+            pagination: { el: '.swiper-pagination' },
+            // navigation: {
+            //     nextEl: '.swiper-button-next',
+            //     prevEl: '.swiper-button-prev',
+            // },
+            // scrollbar: { el: '.swiper-scrollbar' },
+        })
+    })
+</script>
