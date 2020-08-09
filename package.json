@@ -2,7 +2,7 @@
     "name": "hayatemoon",
     "description": "A custom  theme for hayatemoon blog powered by the Ghost publishing platform",
     "demo": "https://blog.hayatemoon.com",
-    "version": "3.0.12",
+    "version": "4.0.1",
     "engines": {
         "ghost": ">=3.0.0",
         "ghost-api": "v3"
@@ -33,6 +33,7 @@
     "keywords": [
         "ghost",
         "theme",
+        "ghost-theme",
         "hayatemoon",
         "blog"
     ],
