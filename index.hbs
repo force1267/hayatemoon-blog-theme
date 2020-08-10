@@ -59,7 +59,7 @@
                     div.setAttribute('class', 'post-card')
                     div.innerHTML =
                     `<div>
-                        <img src="${post.feature_image}" alt="${post.title}" />
+                        <img src="${post.feature_image || "/assets/icons/post-no-photo.jpg"}" alt="${post.title}" />
                     </div>
                     <span>${moment(post.published_at).format("DD MMM . YYYY")}</span>
                     <header>
