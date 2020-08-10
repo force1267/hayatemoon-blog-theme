@@ -140,10 +140,8 @@
                 let resp = await fetch(`/ghost/api/v3/content/posts/?key=${api_key}&filter=tag:${tag}&limit=all&fields=title,url,feature_image`)
                 json = await resp.json()
                 let posts = json.posts
-                console.log(posts)
                 let cards = []
                 for(let post of posts) {
-                    console.log(post)
                     let card = 
 `<a href="##url" class="search-card">
     <div>
