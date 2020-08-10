@@ -143,6 +143,7 @@
                 console.log(posts)
                 let cards = []
                 for(let post of posts) {
+                    console.log(post)
                     let card = 
 `<a href="##url" class="search-card">
     <div>
@@ -151,7 +152,7 @@
     <h1>##title</h1>
 </a>`
                     .split("##url").join(post.url)
-                    .split("##feature_image").join(post.feature_image)
+                    .split("##feature_image").join(post.feature_image ? post.feature_image : ("/assets/icons/post-no-photo.jpg"))
                     .split("##title").join(post.title)
                     cards.push(card)
                 }
