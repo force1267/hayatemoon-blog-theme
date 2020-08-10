@@ -674,7 +674,7 @@ header nav div {
 
 .tag.nav:not(.active):hover {
     border-color: var(--text-light);
-    color: var(--text-light);
+    color: var(--text-light) !important;
 }
 
 #index {
